@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+
 //java -cp ./target/JavaWordCount-1.0-SNAPSHOT.jar spark.examples.JavaWordCount local[1] ../../README.md
 //
 //hadoop fs -put ../../README.md
