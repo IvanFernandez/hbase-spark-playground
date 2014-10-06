@@ -6,14 +6,14 @@ JavaWordCountSpark
 A basic java word count for spark
 
 
-# H1 How-to
+###How-to
 
 # H4 Configuration
 Optionally you'll need to set your hadoop configuration with the following commmand:
     export HADOOP_CONF_DIR=/etc/hadoop/conf   # path to your hadoop configuration
 
 
-# H4 Run locally
+####Run locally
 java -cp ./target/JavaWordCount-1.0-SNAPSHOT.jar spark.examples.JavaWordCount local[1] README.md
 
 
