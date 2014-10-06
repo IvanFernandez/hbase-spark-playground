@@ -30,14 +30,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-
-//java -cp ./target/JavaWordCount-1.0-SNAPSHOT.jar spark.examples.JavaWordCount local[1] ../../README.md
+//export HADOOP_CONF_DIR=/etc/hadoop/conf
+//java -cp ./target/JavaWordCount-1.0-SNAPSHOT.jar spark.examples.JavaWordCount local[1] README.md
 //
-//hadoop fs -put ../../README.md
+//hadoop fs -put README.md
 //spark-submit --class spark.examples.JavaWordCount --master local[8]  ./target/JavaWordCount-1.0-SNAPSHOT.jar local[8] README.md
 //
 //
-//export HADOOP_CONF_DIR=/etc/hadoop/conf
 //spark-submit --class spark.examples.JavaWordCount --master yarn-cluster  --executor-memory 1G --num-executors 2 ./target/JavaWordCount-1.0-SNAPSHOT.jar yarn-cluster README.md
 
 public final class JavaWordCount {
