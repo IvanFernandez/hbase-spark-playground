@@ -45,8 +45,7 @@ public class SparkToHBaseWriter {
 		oldAPIJobConfiguration.setOutputFormat(TableOutputFormat.class);
 		oldAPIJobConfiguration.set(TableOutputFormat.OUTPUT_TABLE, tableName);
 		
-
-
+		
 		
 		HBaseAdmin hBaseAdmin = null;
 		try {
