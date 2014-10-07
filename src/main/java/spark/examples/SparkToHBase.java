@@ -25,7 +25,7 @@ import scala.Tuple2;
 
 //http://codereview.stackexchange.com/questions/56641/producing-a-sorted-wordcount-with-spark
 
-public class SparkToHBaseWriter {
+public class SparkToHBase {
 	
 	private final static String tableName = "test";
 	private final static String columnFamily = "cf";
@@ -41,7 +41,7 @@ public class SparkToHBaseWriter {
 		newAPIJobConfiguration.setOutputFormatClass(org.apache.hadoop.hbase.mapreduce.TableOutputFormat.class);
 		
 		// old Hadoop API configuration
-		JobConf oldAPIJobConfiguration = new JobConf(conf, SparkToHBaseWriter.class);
+		JobConf oldAPIJobConfiguration = new JobConf(conf, SparkToHBase.class);
 		oldAPIJobConfiguration.setOutputFormat(TableOutputFormat.class);
 		oldAPIJobConfiguration.set(TableOutputFormat.OUTPUT_TABLE, tableName);
 		
