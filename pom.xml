@@ -33,12 +33,12 @@
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
 			<artifactId>hbase-common</artifactId>
-			<version>${hbase.compila.version2}</version>
+			<version>${hbase.compila.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
-			<artifactId>hbase-server</artifactId>
-			<version>${hbase.compila.version2}</version>
+			<artifactId>hbase-client</artifactId>
+			<version>${hbase.compila.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
