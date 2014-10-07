@@ -1,7 +1,6 @@
 package spark.examples;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -13,16 +12,14 @@ import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapred.TableOutputFormat;
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapred.JobConf;
+import org.apache.hadoop.mapreduce.Job;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.rdd.RDD;
-import org.apache.hadoop.mapreduce.Job;
 
 import scala.Tuple2;
 
@@ -37,18 +34,18 @@ public class SparkToHBaseWriter {
 		Configuration conf = HBaseConfiguration.create();
 		conf.addResource(new Path("file:///etc/hbase/conf.dist/hbase-site.xml"));
 		conf.set(TableInputFormat.INPUT_TABLE, tableName);
-		conf.set(TableOutputFormat.OUTPUT_TABLE, tableName);
 		
-		//Job jobConf = Job.getInstance(conf);
-		//jobConf.getConfiguration().set(TableOutputFormat.OUTPUT_TABLE, tableName);
-		//jobConf.setOutputFormatClass(Put.class);
+		// new Hadoop API configuration
+		Job newAPIJobConfiguration = Job.getInstance(conf);
+		newAPIJobConfiguration.getConfiguration().set(TableOutputFormat.OUTPUT_TABLE, tableName);
+		newAPIJobConfiguration.setOutputFormatClass(org.apache.hadoop.hbase.mapreduce.TableOutputFormat.class);
 		
-		JobConf jobConf = new JobConf(conf, SparkToHBaseWriter.class);
-		jobConf.setOutputFormat(TableOutputFormat.class);
-		jobConf.set(TableOutputFormat.OUTPUT_TABLE, tableName);
+		// old Hadoop API configuration
+		JobConf oldAPIJobConfiguration = new JobConf(conf, SparkToHBaseWriter.class);
+		oldAPIJobConfiguration.setOutputFormat(TableOutputFormat.class);
+		oldAPIJobConfiguration.set(TableOutputFormat.OUTPUT_TABLE, tableName);
 		
-//		jobConf.setOutputKeyClass(ImmutableBytesWritable.class); 
-//		jobConf.setOutputValueClass(Put.class); 
+
 
 		
 		HBaseAdmin hBaseAdmin = null;
@@ -70,16 +67,18 @@ public class SparkToHBaseWriter {
 		}
 
 		System.out.println("-----------------------------------------------");
-		//readTable(conf);
+		readTable(conf);
 		System.out.println("-----------------------------------------------");
-		writeRowToTableWithJobConf(jobConf);
+		writeRowOldHadoopAPI(oldAPIJobConfiguration);
+		writeRowNewHadoopAPI(newAPIJobConfiguration.getConfiguration());
 		System.out.println("-----------------------------------------------");
 		readTable(conf);
 		System.out.println("-----------------------------------------------");
-		//System.exit(0);
 
 
 	}
+
+
 
 	private static void readTable(Configuration conf) {
 		SparkContext sc = new SparkContext("local", "get HBase data");
@@ -93,7 +92,7 @@ public class SparkToHBaseWriter {
 		System.out.println("Number of register in hbase table: " + count);
 	}
 	
-	private static void writeRowToTableWithJobConf(JobConf conf) {
+	private static void writeRowOldHadoopAPI(JobConf conf) {
 		JavaSparkContext sparkContext = new JavaSparkContext("local", "write data to HBase");
 		//FIXME: mirar como quitar la carga de un texto arbitrario para crear un JavaRDD
 		JavaRDD<String> records = sparkContext.textFile("README.md",1);
@@ -102,8 +101,28 @@ public class SparkToHBaseWriter {
 	    	@Override
 			public Tuple2<ImmutableBytesWritable, Put> call(String t)
 					throws Exception {
-				Put put = new Put(Bytes.toBytes("rowkey3"));
-				put.add(Bytes.toBytes(columnFamily), Bytes.toBytes("c"),
+				Put put = new Put(Bytes.toBytes("rowkey7"));
+				put.add(Bytes.toBytes(columnFamily), Bytes.toBytes("z"),
+						Bytes.toBytes("value3"));
+
+				return new Tuple2<ImmutableBytesWritable, Put>(
+						new ImmutableBytesWritable(), put);
+			}
+	      });
+		hbasePuts.saveAsHadoopDataset(conf);
+	}
+	
+	private static void writeRowNewHadoopAPI(Configuration conf) {
+		
+		JavaSparkContext sparkContext = new JavaSparkContext("local", "write data to HBase");
+		JavaRDD<String> records = sparkContext.textFile("README.md",1);
+		//FIXME: mirar como quitar la carga de un texto arbitrario para crear un JavaRDD
+	    JavaPairRDD<ImmutableBytesWritable, Put> hbasePuts = records.mapToPair(new PairFunction<String, ImmutableBytesWritable, Put>() {
+	    	@Override
+			public Tuple2<ImmutableBytesWritable, Put> call(String t)
+					throws Exception {
+				Put put = new Put(Bytes.toBytes("rowkey6"));
+				put.add(Bytes.toBytes(columnFamily), Bytes.toBytes("z"),
 						Bytes.toBytes("value3"));
 
 				return new Tuple2<ImmutableBytesWritable, Put>(
@@ -111,28 +130,7 @@ public class SparkToHBaseWriter {
 			}
 	      });
 	    
-		hbasePuts.saveAsHadoopDataset(conf);
+		hbasePuts.saveAsNewAPIHadoopDataset(conf);
 	}
-	
-//	private static void writeRowToTableWithConf(Configuration conf) {
-//		
-//		JavaSparkContext sparkContext = new JavaSparkContext("local", "write data to HBase");
-//		JavaRDD<String> records = sparkContext.textFile("README.md",1);
-//		
-//	    JavaPairRDD<NullWritable, Put> hbasePuts = records.mapToPair(new PairFunction<String, NullWritable, Put>() {
-//	    	@Override
-//			public Tuple2<NullWritable, Put> call(String t)
-//					throws Exception {
-//				Put put = new Put(Bytes.toBytes("rowkey3"));
-//				put.add(Bytes.toBytes(columnFamily), Bytes.toBytes("c"),
-//						Bytes.toBytes("value3"));
-//
-//				return new Tuple2<NullWritable, Put>(
-//						NullWritable.get(), put);
-//			}
-//	      });
-//	    
-//		hbasePuts.saveAsNewAPIHadoopDataset(conf);
-//	}
 
 }
