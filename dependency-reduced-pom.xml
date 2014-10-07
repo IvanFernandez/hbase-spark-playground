@@ -11,8 +11,8 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.7</source>
+          <target>1.7</target>
         </configuration>
       </plugin>
       <plugin>
@@ -55,7 +55,17 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>myrepository</id>
+      <url>file:///usr/local/lambdoop/mavenrepo/</url>
+    </repository>
+  </distributionManagement>
   <properties>
+    <hbase.compila.version2>0.98.6.1-hadoop2</hbase.compila.version2>
+    <hbase.server.version>0.98.0.2.1.1.0-385-hadoop2</hbase.server.version>
+    <hbase.common.version>0.98.0.2.1.4.0-632-hadoop2</hbase.common.version>
+    <hbase.compila.version>0.98.0-hadoop2</hbase.compila.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spark.version>1.0.1</spark.version>
   </properties>
