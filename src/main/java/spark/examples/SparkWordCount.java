@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 //http://codereview.stackexchange.com/questions/56641/producing-a-sorted-wordcount-with-spark
 
 
-//export HADOOP_CONF_DIR=/etc/hadoop/conf
+//export HADOOP_CONF_DIR=/etc/hadoop/conf	# no parece hacer falta
 //java -cp ./target/hbase-spark-playground-1.0-SNAPSHOT.jar spark.examples.SparkWordCount local[1] README.md
 //
 //hadoop fs -put README.md

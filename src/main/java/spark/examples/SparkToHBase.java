@@ -25,6 +25,19 @@ import scala.Tuple2;
 
 //http://codereview.stackexchange.com/questions/56641/producing-a-sorted-wordcount-with-spark
 
+//export HADOOP_CONF_DIR=/etc/hadoop/conf
+//java -cp ./target/hbase-spark-playground-1.0-SNAPSHOT.jar spark.examples.SparkToHBase
+//
+//hadoop fs -put README.md
+//spark-submit --class spark.examples.SparkToHBase --master local[8]  ./target/hbase-spark-playground-1.0-SNAPSHOT.jar
+//FIXME: La ejecucción no comienza y da el siguiente error:
+//       WARN hdfs.BlockReaderLocal: The short-circuit local reads feature cannot be used because libhadoop cannot be loaded.
+//
+//spark-submit --class spark.examples.SparkToHBase --master yarn-cluster  --executor-memory 1G --num-executors 2 ./target/hbase-spark-playground-1.0-SNAPSHOT.jar yarn-cluster
+//FIXME: el submit se ejecuta y lee y guarda en HBase correctamente. Sin embargo la tarea Spark termina como Failed en distributedFinalState:.
+//Viendo los logs se puede observar que hay un problema con el DNS
+//ERROR mapreduce.TableInputFormatBase: Cannot resolve the host name for sandbox.hortonworks.com/192.168.149.133 because of javax.naming.NameNotFoundException: DNS name not found [response code 3]; remaining name '133.149.168.192.in-addr.arpa'
+
 public class SparkToHBase {
 	
 	private final static String tableName = "test";
@@ -73,7 +86,7 @@ public class SparkToHBase {
 		System.out.println("-----------------------------------------------");
 		readTable(conf);
 		System.out.println("-----------------------------------------------");
-
+		System.exit(0);
 
 	}
 
@@ -100,7 +113,7 @@ public class SparkToHBase {
 	    	@Override
 			public Tuple2<ImmutableBytesWritable, Put> call(String t)
 					throws Exception {
-				Put put = new Put(Bytes.toBytes("rowkey7"));
+				Put put = new Put(Bytes.toBytes("rowkey9"));
 				put.add(Bytes.toBytes(columnFamily), Bytes.toBytes("z"),
 						Bytes.toBytes("value3"));
 
@@ -120,7 +133,7 @@ public class SparkToHBase {
 	    	@Override
 			public Tuple2<ImmutableBytesWritable, Put> call(String t)
 					throws Exception {
-				Put put = new Put(Bytes.toBytes("rowkey6"));
+				Put put = new Put(Bytes.toBytes("rowkey10"));
 				put.add(Bytes.toBytes(columnFamily), Bytes.toBytes("z"),
 						Bytes.toBytes("value3"));
 
