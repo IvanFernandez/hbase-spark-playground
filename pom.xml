@@ -2,22 +2,38 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>spark.examples</groupId>
-	<artifactId>JavaWordCount</artifactId>
+	<groupId>com.hopcroft.bigdata</groupId>
+	<artifactId>hbase-spark-playground</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>JavaWordCount</name>
+	<name>hbase-spark-playground</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spark.version>1.0.1</spark.version>
-		<hbase.common.version>0.98.0.2.1.4.0-632-hadoop2</hbase.common.version>
-		<hbase.server.version>0.98.0.2.1.1.0-385-hadoop2</hbase.server.version>
-		<hbase.compila.version>0.98.0-hadoop2</hbase.compila.version>
-		<hbase.compila.version2>0.98.6.1-hadoop2</hbase.compila.version2>
+		<spark.version>1.1.0</spark.version>
+		<hadoop.version>2.4.0</hadoop.version>
+		<hbase.version>0.98.0.2.1.1.0-385-hadoop2</hbase.version>
 	</properties>
+
+	<repositories>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</snapshots>
+			<id>HDPReleases</id>
+			<name>HDP Releases</name>
+			<url>http://repo.hortonworks.com/content/repositories/releases/</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -25,27 +41,125 @@
 			<artifactId>spark-core_2.10</artifactId>
 			<version>${spark.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.apache.hadoop</groupId> <artifactId>hadoop-hdfs</artifactId> 
-			<version>2.4.0</version> </dependency> <dependency> <groupId>org.apache.hadoop</groupId> 
-			<artifactId>hadoop-yarn-server-web-proxy</artifactId> <version>2.4.0</version> 
-			</dependency> <dependency> <groupId>org.apache.hadoop</groupId> <artifactId>hadoop-yarn-server-nodemanager</artifactId> 
-			<version>2.4.0</version> </dependency> -->
 		<dependency>
-			<groupId>org.apache.hbase</groupId>
-			<artifactId>hbase-common</artifactId>
-			<version>${hbase.compila.version}</version>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-streaming_2.10</artifactId>
+			<version>${spark.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.hbase</groupId>
-			<artifactId>hbase-client</artifactId>
-			<version>${hbase.compila.version}</version>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-yarn_2.10</artifactId>
+			<version>${spark.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>4.8.2</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- Hadoop -->
+		<!-- The exclusion prevents a "SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings 
+			for an explanation. -->
+		<!-- Using a suitable version for hadoop-client is needed for Spark to 
+			work OK with Hadoop http://spark.apache.org/docs/latest/hadoop-third-party-distributions.html -->
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-client</artifactId>
+			<version>${hadoop.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-yarn-api</artifactId>
+			<version>${hadoop.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-yarn-client</artifactId>
+			<version>${hadoop.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-yarn-common</artifactId>
+			<version>${hadoop.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-yarn-server-web-proxy</artifactId>
+			<version>${hadoop.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- HBase -->
+		<dependency>
+			<groupId>org.apache.hbase</groupId>
+			<artifactId>hbase-common</artifactId>
+			<version>${hbase.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hbase</groupId>
+			<artifactId>hbase-client</artifactId>
+			<version>${hbase.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hbase</groupId>
+			<artifactId>hbase-server</artifactId>
+			<version>${hbase.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -97,10 +211,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<distributionManagement>
-		<repository>
-			<id>myrepository</id>
-			<url>file:///usr/local/lambdoop/mavenrepo/</url>
-		</repository>
-	</distributionManagement>
 </project>

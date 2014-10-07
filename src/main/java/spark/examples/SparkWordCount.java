@@ -31,15 +31,15 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 //export HADOOP_CONF_DIR=/etc/hadoop/conf
-//java -cp ./target/JavaWordCount-1.0-SNAPSHOT.jar spark.examples.JavaWordCount local[1] README.md
+//java -cp ./target/hbase-spark-playground-1.0-SNAPSHOT.jar spark.examples.SparkWordCount local[1] README.md
 //
 //hadoop fs -put README.md
-//spark-submit --class spark.examples.JavaWordCount --master local[8]  ./target/JavaWordCount-1.0-SNAPSHOT.jar local[8] README.md
+//spark-submit --class spark.examples.SparkWordCount --master local[8]  ./target/hbase-spark-playground-1.0-SNAPSHOT.jar local[8] README.md
 //
 //
-//spark-submit --class spark.examples.JavaWordCount --master yarn-cluster  --executor-memory 1G --num-executors 2 ./target/JavaWordCount-1.0-SNAPSHOT.jar yarn-cluster README.md
+//spark-submit --class spark.examples.SparkWordCount --master yarn-cluster  --executor-memory 1G --num-executors 2 ./target/hbase-spark-playground-1.0-SNAPSHOT.jar yarn-cluster README.md
 
-public final class JavaWordCount {
+public final class SparkWordCount {
   private static final Pattern SPACE = Pattern.compile(" ");
 
   public static void main(String[] args) throws Exception {
@@ -49,7 +49,7 @@ public final class JavaWordCount {
       System.exit(1);
     }
 
-    SparkConf sparkConf = new SparkConf().setAppName("JavaWordCount");
+    SparkConf sparkConf = new SparkConf().setAppName("SparkWordCount");
     sparkConf.setMaster(args[0]);
     JavaSparkContext ctx = new JavaSparkContext(sparkConf);
     JavaRDD<String> lines = ctx.textFile(args[1], 1);
