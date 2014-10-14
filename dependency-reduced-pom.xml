@@ -62,6 +62,15 @@
       <name>HDP Releases</name>
       <url>http://repo.hortonworks.com/content/repositories/releases/</url>
     </repository>
+    <repository>
+      <snapshots />
+      <id>sonatype-oss</id>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+    <repository>
+      <id>spring-milestones</id>
+      <url>http://repo.springsource.org/libs-milestone/</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
