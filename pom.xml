@@ -159,7 +159,35 @@
 			</exclusions>
 		</dependency>
 
+		<!-- Kryo serializer -->
+		<dependency>
+			<groupId>com.esotericsoftware</groupId>
+			<artifactId>kryo</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 
+		<dependency>
+			<groupId>com.twitter</groupId>
+			<artifactId>chill-all_2.11</artifactId>
+			<version>0.5.0</version>
+		</dependency>
+
+
+
+		<!-- ElasticSearc PoC -->
+		<!-- Google Guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
+		<!-- ElasticSearch Hadoop -->
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch-hadoop</artifactId>
+			<version>2.1.0.Beta2</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
