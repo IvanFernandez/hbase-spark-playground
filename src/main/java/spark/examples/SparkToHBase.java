@@ -12,6 +12,7 @@ import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapred.TableOutputFormat;
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.spark.SparkContext;
@@ -26,7 +27,7 @@ import scala.Tuple2;
 //http://codereview.stackexchange.com/questions/56641/producing-a-sorted-wordcount-with-spark
 
 //export HADOOP_CONF_DIR=/etc/hadoop/conf
-//java -cp ./target/hbase-spark-playground-1.0-SNAPSHOT.jar spark.examples.SparkToHBase
+//java -cp ./target/hbase-spark-playground-1.0-SNAPSHOT.jar spark.examples.SparkToHBase local[2]
 //
 //hadoop fs -put README.md
 //spark-submit --class spark.examples.SparkToHBase --master local[8]  ./target/hbase-spark-playground-1.0-SNAPSHOT.jar

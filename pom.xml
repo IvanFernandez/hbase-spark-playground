@@ -187,11 +187,8 @@
 
 		<!-- ElasticSearc PoC -->
 		<!-- Google Guava -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>18.0</version>
-		</dependency>
+		<!-- <dependency> <groupId>com.google.guava</groupId> <artifactId>guava</artifactId> 
+			<version>18.0</version> </dependency> -->
 		<!-- ElasticSearch Hadoop -->
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
