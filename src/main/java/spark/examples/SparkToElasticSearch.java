@@ -14,7 +14,6 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.PairFunction;
 import org.elasticsearch.hadoop.cfg.ConfigurationOptions;
-
 import scala.Tuple2;
 
 import com.google.common.collect.ImmutableList;
