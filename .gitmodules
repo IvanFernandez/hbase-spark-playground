@@ -1,3 +1,4 @@
 [submodule "novelti-core"]
 	path = novelti-core
 	url = git@github.com:Lambdoop/novelti-core.git
+	branch = stable
